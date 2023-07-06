@@ -6,7 +6,7 @@
     "plugin:@typescript-eslint/recommended" // uses the recommended rules from the @typescript-eslint/eslint-plugin
   ],
   "parserOptions": {
-    "ecmaVersion": 2018,
+    "ecmaVersion": 2022,
     "sourceType": "module"
   },
   "ignorePatterns": [
@@ -22,7 +22,7 @@
     "curly": ["warn", "all"],
     "brace-style": ["warn"],
     "prefer-arrow-callback": ["warn"],
-    "max-len": ["warn", 140],
+    "max-len": ["warn", 800],
     "no-console": ["warn"], // use the provided Homebridge log method instead
     "no-non-null-assertion": ["off"],
     "comma-spacing": ["error"],
