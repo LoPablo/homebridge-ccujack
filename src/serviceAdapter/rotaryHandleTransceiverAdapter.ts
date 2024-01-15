@@ -6,8 +6,9 @@ import Tools from '../model/tools';
 import Value from '../model/value';
 import Api from '../api';
 import Parameter from '../model/parameter';
+import serviceAdapter from './serviceAdapter';
 
-export default class RotaryHandleTransceiverAdapter{
+export default class RotaryHandleTransceiverAdapter extends serviceAdapter{
 
   public readonly platform: CCUJackPlatform;
   public readonly accessory: PlatformAccessory;
@@ -37,6 +38,7 @@ export default class RotaryHandleTransceiverAdapter{
   }
 
   private constructor(ccuJackAccessory: CCUJackPlatformAccessory, channelObject : Channel, valueParameter : Parameter, firstValue : Value) {
+    super();
     this.platform = ccuJackAccessory.platform;
     this.accessory = ccuJackAccessory.accessory;
     this.channelObject = channelObject;
@@ -56,6 +58,7 @@ export default class RotaryHandleTransceiverAdapter{
     this.serviceOpened.getCharacteristic(this.platform.Characteristic.ContactSensorState)
       .onGet(this.handleContactSensorOpenedStateGet.bind(this));
   }
+
 
 
   newValue(newValue : Value) {

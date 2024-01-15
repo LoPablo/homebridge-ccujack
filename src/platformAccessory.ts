@@ -1,7 +1,7 @@
 import { Service, PlatformAccessory, CharacteristicValue, Logger } from 'homebridge';
 
 import { CCUJackPlatform } from './platform';
-import serviceAdapterCreator from './serviceAdapter/serviceAdapterCreator';
+// import serviceAdapterCreator from './serviceAdapter/serviceAdapterCreator';
 import Device from './model/device';
 import { fetch } from 'undici';
 import Channel from './model/channel';
@@ -33,6 +33,10 @@ export class CCUJackPlatformAccessory {
     this.addServiceAdapters();
   }
 
+
+  private adapterCreation(){
+
+  }
   private addServiceAdapters()  {
     for (const channel of this.deviceObject.channels){
       switch (channel.type) {

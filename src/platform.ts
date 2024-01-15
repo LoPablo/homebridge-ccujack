@@ -9,7 +9,7 @@ import {fetch} from 'undici';
 
 import DeviceList from './model/deviceList';
 import VendorInfo from './model/vendorInfo';
-import serviceAdapterCreator from './serviceAdapter/serviceAdapterCreator';
+// import serviceAdapterCreator from './serviceAdapter/serviceAdapterCreator';
 import Device from './model/device';
 import Api from './api';
 import Tools from './model/tools';
@@ -38,7 +38,9 @@ export class CCUJackPlatform implements DynamicPlatformPlugin {
       this.api.on('didFinishLaunching', async () => {
         log.info('Hombridge signaled didFinishLaunching callback');
         if (await this.firstContact()) {
-          serviceAdapterCreator.createInstance(config);
+
+
+          //serviceAdapterCreator.createInstance(config);
           await this.discoverDevices();
         } else {
           this.log.error('There was an error making first contact. See error above. Cannot continue.');
