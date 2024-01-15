@@ -1,0 +1,1 @@
+{"version":3,"file":"customServices.d.ts","sourceRoot":"","sources":["../../src/serviceAdapter/customServices.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,cAAc,EAAE,OAAO,EAAyB,MAAM,YAAY,CAAC;AAC5E,qBAAa,WAAY,SAAQ,cAAc;IAC7C,MAAM,CAAC,QAAQ,CAAC,IAAI,EAAE,MAAM,CAA0C;;CAUvE;AACD,qBAAa,WAAY,SAAQ,OAAO;IACtC,MAAM,CAAC,IAAI,SAA0C;gBAEzC,WAAW,EAAE,MAAM,EAAE,OAAO,CAAC,EAAE,MAAM;CAMlD"}
