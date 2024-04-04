@@ -65,7 +65,6 @@ class HoermannGarageDoorAdapter extends serviceAdapter_1.default {
         }
         else if (this.lastStateValue.value === 1 || this.lastStateValue.value === 2) {
             this.assuemedState = this.platform.Characteristic.CurrentDoorState.OPEN;
-            this.garageDoorService.updateCharacteristic(this.platform.Characteristic.CurrentDoorState, this.platform.Characteristic.CurrentDoorState.OPEN);
         }
         else {
             if (previousValue.value === 0) {
@@ -77,7 +76,6 @@ class HoermannGarageDoorAdapter extends serviceAdapter_1.default {
             else {
                 this.assuemedState = this.platform.Characteristic.CurrentDoorState.STOPPED;
             }
-            return;
         }
         this.garageDoorService.updateCharacteristic(this.platform.Characteristic.CurrentDoorState, this.assuemedState);
     }

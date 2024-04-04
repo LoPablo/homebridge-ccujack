@@ -91,16 +91,15 @@ export default class HoermannGarageDoorAdapter extends serviceAdapter {
 
     } else if (this.lastStateValue!.value === 1 || this.lastStateValue.value === 2) {
       this.assuemedState = this.platform.Characteristic.CurrentDoorState.OPEN;
-      this.garageDoorService.updateCharacteristic(this.platform.Characteristic.CurrentDoorState, this.platform.Characteristic.CurrentDoorState.OPEN);
     } else {
       if (previousValue.value === 0) {
+
         this.assuemedState = this.platform.Characteristic.CurrentDoorState.OPENING;
       } else if (previousValue.value === 1) {
         this.assuemedState = this.platform.Characteristic.CurrentDoorState.CLOSING;
       } else {
         this.assuemedState = this.platform.Characteristic.CurrentDoorState.STOPPED;
       }
-      return;
     }
     this.garageDoorService.updateCharacteristic(this.platform.Characteristic.CurrentDoorState, this.assuemedState);
 
