@@ -98,10 +98,10 @@ class HoermannGarageDoorAdapter extends serviceAdapter_1.default {
     handleTargetDoorStateSet(value) {
         this.log.debug('Triggered SET TargetDoorState: ' + value);
         if (value === this.platform.Characteristic.TargetDoorState.CLOSED) {
-            api_1.default.getInstance().putCommand('device/' + this.channelObject.parent + '/' + this.channelObject.identifier + '/' + this.commandParameter.id + '/~pv', '3');
+            api_1.default.getInstance().putCommandNumber('device/' + this.channelObject.parent + '/' + this.channelObject.identifier + '/' + this.commandParameter.id + '/~pv', 3);
         }
         else if (value === this.platform.Characteristic.TargetDoorState.OPEN) {
-            api_1.default.getInstance().putCommand('device/' + this.channelObject.parent + '/' + this.channelObject.identifier + '/' + this.commandParameter.id + '/~pv', '1');
+            api_1.default.getInstance().putCommandNumber('device/' + this.channelObject.parent + '/' + this.channelObject.identifier + '/' + this.commandParameter.id + '/~pv', 1);
         }
     }
 }

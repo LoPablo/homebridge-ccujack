@@ -55,7 +55,7 @@ class Api {
             throw new Error('Request did not return 200, but ' + response.status);
         }
     }
-    async putCommand(subPath, value) {
+    async putCommandNumber(subPath, value) {
         this.log.info('Making put with url: ' + 'http://' + this.config.hostname + ':' + this.config.port + '/' + subPath);
         const response = await (0, undici_1.fetch)('http://' + this.config.hostname + ':' + this.config.port + '/' + subPath, {
             method: 'PUT',

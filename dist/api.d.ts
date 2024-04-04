@@ -10,7 +10,7 @@ export default class Api {
     static createInstance(log: Logger, config: PlatformConfig): void;
     static getInstance(): Api;
     makeRequest(subPath: string): Promise<any>;
-    putCommand(subPath: string, value: string): Promise<any>;
+    putCommandNumber(subPath: string, value: number): Promise<any>;
     registerNewValueCallback(mqttTopic: string, callback: (newValue: Value) => void): void;
     informCallback(mqttTopic: string, newValue: Value): void;
 }
