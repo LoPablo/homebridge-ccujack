@@ -1,5 +1,5 @@
 import {Logger, PlatformConfig} from 'homebridge';
-import {fetch} from 'undici';
+import {fetch, Client} from 'undici';
 import * as mqtt from 'mqtt';
 import Value from './model/value';
 
@@ -7,8 +7,8 @@ export default class Api {
   private readonly config: PlatformConfig;
   private static instance: Api;
   public readonly log: Logger;
-  private mqttClient : mqtt.Client;
-  private newValueListeners : {[mqttTopic: string]: (newValue : Value) => void};
+  private mqttClient: mqtt.Client;
+  private newValueListeners: { [mqttTopic: string]: (newValue: Value) => void };
 
   private constructor(log: Logger, config: PlatformConfig) {
     this.config = config;
@@ -43,8 +43,26 @@ export default class Api {
     }
   }
 
-  public registerNewValueCallback(mqttTopic : string, callback : (newValue : Value) => void){
-    this.mqttClient.subscribe(mqttTopic, (err : Error) =>{
+  public async putCommand(subPath: string, value: string): Promise<any> {
+    this.log.info('Making put with url: ' + 'http://' + this.config.hostname + ':' + this.config.port + '/' + subPath);
+    const response = await fetch('http://' + this.config.hostname + ':' + this.config.port + '/' + subPath, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        v: value,
+      }),
+    });
+    if (response.ok) {
+      return response.json();
+    } else {
+      throw new Error('Request did not return 200, but ' + response.status);
+    }
+  }
+
+  public registerNewValueCallback(mqttTopic: string, callback: (newValue: Value) => void) {
+    this.mqttClient.subscribe(mqttTopic, (err: Error) => {
       if (err) {
         this.log.error(err.message);
       }
@@ -52,8 +70,8 @@ export default class Api {
     this.newValueListeners[mqttTopic] = callback;
   }
 
-  public informCallback(mqttTopic : string, newValue : Value){
-    if (this.newValueListeners[mqttTopic] !== null){
+  public informCallback(mqttTopic: string, newValue: Value) {
+    if (this.newValueListeners[mqttTopic] !== null) {
       this.newValueListeners[mqttTopic](newValue);
     }
   }

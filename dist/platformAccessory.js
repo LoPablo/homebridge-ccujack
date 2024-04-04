@@ -8,6 +8,7 @@ const shutterContactAdapter_1 = __importDefault(require("./serviceAdapter/shutte
 const rotaryHandleTransceiverAdapter_1 = __importDefault(require("./serviceAdapter/rotaryHandleTransceiverAdapter"));
 const acousticDisplayRecieverAdapter_1 = __importDefault(require("./serviceAdapter/acousticDisplayRecieverAdapter"));
 const keytransceiverAdapter_1 = __importDefault(require("./serviceAdapter/keytransceiverAdapter"));
+const hoermannGarageDoorAdapter_1 = __importDefault(require("./serviceAdapter/hoermannGarageDoorAdapter"));
 class CCUJackPlatformAccessory {
     constructor(platform, accessory, deviceObject) {
         this.platform = platform;
@@ -39,6 +40,11 @@ class CCUJackPlatformAccessory {
                 case 'ACOUSTIC_DISPLAY_RECEIVER': {
                     this.log.info('Found ACOUSTIC_DISPLAY_RECEIVER Channel');
                     acousticDisplayRecieverAdapter_1.default.newInstance(this, channel);
+                    break;
+                }
+                case 'DOOR_RECEIVER': {
+                    this.log.info('Found DOOR_RECEIVER Channel');
+                    hoermannGarageDoorAdapter_1.default.newInstance(this, channel);
                     break;
                 }
                 case 'SHUTTER_CONTACT': {
