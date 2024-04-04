@@ -67,7 +67,8 @@ class Api {
             }),
         });
         if (response.ok) {
-            return response.json();
+            this.log.info('Request ok with Body: ' + response.text());
+            return response.text();
         }
         else {
             throw new Error('Request did not return 200, but ' + response.status);
