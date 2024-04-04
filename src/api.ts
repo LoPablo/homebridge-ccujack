@@ -43,7 +43,7 @@ export default class Api {
     }
   }
 
-  public async putCommand(subPath: string, value: string): Promise<any> {
+  public async putCommandNumber(subPath: string, value: number): Promise<any> {
     this.log.info('Making put with url: ' + 'http://' + this.config.hostname + ':' + this.config.port + '/' + subPath);
     const response = await fetch('http://' + this.config.hostname + ':' + this.config.port + '/' + subPath, {
       method: 'PUT',
