@@ -56,7 +56,9 @@ export default class Api {
       this.log.info('Request ok');
       return '';
     } else {
-      throw new Error('Request did not return 200, but ' + response.status);
+      //throw new Error('Request did not return 200, but ' + response.status);
+      this.log.info('Request did not return 200, but ' + response.status);
+      this.log.info('Request answer, but ' + JSON.stringify(response));
     }
   }
 
