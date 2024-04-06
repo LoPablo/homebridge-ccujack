@@ -12,10 +12,11 @@ export default class SwitchReceiverAdapter extends serviceAdapter {
     private service;
     private stateParameter;
     private lastStateValue;
+    private debounceJustSet?;
     static newInstance(ccuJackAccessory: CCUJackPlatformAccessory, channelObject: Channel): Promise<void>;
     private constructor();
     newValue(newValue: Value): void;
-    handleOnGet(): string | number | boolean;
+    handleOnGet(): Promise<string | number | boolean>;
     /**
        * Handle requests to set the "On" characteristic
        */

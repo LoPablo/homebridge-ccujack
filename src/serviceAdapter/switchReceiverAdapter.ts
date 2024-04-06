@@ -20,6 +20,8 @@ export default class SwitchReceiverAdapter extends serviceAdapter {
   private stateParameter: Parameter;
   private lastStateValue: Value;
 
+  private debounceJustSet?: Promise<void>;
+
 
   static async newInstance(ccuJackAccessory: CCUJackPlatformAccessory, channelObject: Channel) {
     let stateParameterSearch: Parameter;
@@ -66,8 +68,11 @@ export default class SwitchReceiverAdapter extends serviceAdapter {
     this.service.updateCharacteristic(this.platform.Characteristic.On, newValue.value);
   }
 
-  handleOnGet() {
+  async handleOnGet() {
     this.log.debug('Triggered GET On');
+    if (this.debounceJustSet) {
+      await this.debounceJustSet!;
+    }
     return this.lastStateValue.value;
   }
 
@@ -76,6 +81,7 @@ export default class SwitchReceiverAdapter extends serviceAdapter {
      */
   handleOnSet(value: CharacteristicValue) {
     this.log.debug('Triggered SET On:' + value);
+    this.debounceJustSet = new Promise(resolve => setTimeout(resolve, 3000));
     if (value) {
       Api.getInstance().putCommandBoolean('device/' + this.channelObject.parent + '/' + this.channelObject.identifier + '/' + this.stateParameter.id + '/~pv', true);
     } else {

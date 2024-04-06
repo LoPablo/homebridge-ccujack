@@ -45,8 +45,11 @@ class SwitchReceiverAdapter extends serviceAdapter_1.default {
         this.lastStateValue = newValue;
         this.service.updateCharacteristic(this.platform.Characteristic.On, newValue.value);
     }
-    handleOnGet() {
+    async handleOnGet() {
         this.log.debug('Triggered GET On');
+        if (this.debounceJustSet) {
+            await this.debounceJustSet;
+        }
         return this.lastStateValue.value;
     }
     /**
@@ -54,6 +57,7 @@ class SwitchReceiverAdapter extends serviceAdapter_1.default {
        */
     handleOnSet(value) {
         this.log.debug('Triggered SET On:' + value);
+        this.debounceJustSet = new Promise(resolve => setTimeout(resolve, 3000));
         if (value) {
             api_1.default.getInstance().putCommandBoolean('device/' + this.channelObject.parent + '/' + this.channelObject.identifier + '/' + this.stateParameter.id + '/~pv', true);
         }
