@@ -76,7 +76,7 @@ export default class SwitchReceiverAdapter extends serviceAdapter {
      */
   handleOnSet(value: CharacteristicValue) {
     this.log.debug('Triggered SET On:' + value);
-    if (value === 1) {
+    if (value) {
       Api.getInstance().putCommandBoolean('device/' + this.channelObject.parent + '/' + this.channelObject.identifier + '/' + this.stateParameter.id + '/~pv', true);
     } else {
       Api.getInstance().putCommandBoolean('device/' + this.channelObject.parent + '/' + this.channelObject.identifier + '/' + this.stateParameter.id + '/~pv', false);
