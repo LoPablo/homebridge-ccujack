@@ -56,7 +56,7 @@ class Api {
         }
     }
     async putComand(subPath, body) {
-        this.log.info('Making put with url: ' + 'http://' + this.config.hostname + ':' + this.config.port + '/' + subPath);
+        this.log.info('Making put with url: ' + 'http://' + this.config.hostname + ':' + this.config.port + '/' + subPath + ' and body ' + body);
         const response = await (0, undici_1.fetch)('http://' + this.config.hostname + ':' + this.config.port + '/' + subPath, {
             method: 'PUT',
             headers: {
