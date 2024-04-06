@@ -55,10 +55,10 @@ class SwitchReceiverAdapter extends serviceAdapter_1.default {
     handleOnSet(value) {
         this.log.debug('Triggered SET On:' + value);
         if (value === 1) {
-            api_1.default.getInstance().putCommandNumber('device/' + this.channelObject.parent + '/' + this.channelObject.identifier + '/' + this.stateParameter.id + '/~pv', 1);
+            api_1.default.getInstance().putCommandBoolean('device/' + this.channelObject.parent + '/' + this.channelObject.identifier + '/' + this.stateParameter.id + '/~pv', true);
         }
         else {
-            api_1.default.getInstance().putCommandNumber('device/' + this.channelObject.parent + '/' + this.channelObject.identifier + '/' + this.stateParameter.id + '/~pv', 0);
+            api_1.default.getInstance().putCommandBoolean('device/' + this.channelObject.parent + '/' + this.channelObject.identifier + '/' + this.stateParameter.id + '/~pv', false);
         }
     }
 }
