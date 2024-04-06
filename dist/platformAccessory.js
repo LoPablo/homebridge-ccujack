@@ -8,7 +8,8 @@ const shutterContactAdapter_1 = __importDefault(require("./serviceAdapter/shutte
 const rotaryHandleTransceiverAdapter_1 = __importDefault(require("./serviceAdapter/rotaryHandleTransceiverAdapter"));
 const acousticDisplayRecieverAdapter_1 = __importDefault(require("./serviceAdapter/acousticDisplayRecieverAdapter"));
 const keytransceiverAdapter_1 = __importDefault(require("./serviceAdapter/keytransceiverAdapter"));
-const hoermannGarageDoorAdapter_1 = __importDefault(require("./serviceAdapter/hoermannGarageDoorAdapter"));
+const doorOpenerAdapter_1 = __importDefault(require("./serviceAdapter/doorOpenerAdapter"));
+const switchReceiverAdapter_1 = __importDefault(require("./serviceAdapter/switchReceiverAdapter"));
 class CCUJackPlatformAccessory {
     constructor(platform, accessory, deviceObject) {
         this.platform = platform;
@@ -23,13 +24,19 @@ class CCUJackPlatformAccessory {
             .setCharacteristic(this.platform.Characteristic.FirmwareRevision, this.deviceObject.firmware);
         this.addServiceAdapters();
     }
-    adapterCreation() {
-    }
+    //  private adapterCreation() {
+    //
+    //  }
     addServiceAdapters() {
         for (const channel of this.deviceObject.channels) {
             switch (channel.type) {
                 case 'MAINTENANCE': {
                     this.log.info('Found MAINTENANCE Channel');
+                    break;
+                }
+                case 'SIMPLE_SWITCH_RECEIVER': {
+                    this.log.info('Found SIMPLE_SWITCH_RECEIVER Channel');
+                    switchReceiverAdapter_1.default.newInstance(this, channel);
                     break;
                 }
                 case 'KEY_TRANSCEIVER': {
@@ -44,7 +51,7 @@ class CCUJackPlatformAccessory {
                 }
                 case 'DOOR_RECEIVER': {
                     this.log.info('Found DOOR_RECEIVER Channel');
-                    hoermannGarageDoorAdapter_1.default.newInstance(this, channel);
+                    doorOpenerAdapter_1.default.newInstance(this, channel);
                     break;
                 }
                 case 'SHUTTER_CONTACT': {

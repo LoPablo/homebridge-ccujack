@@ -9,7 +9,8 @@ import ShutterContactAdapter from './serviceAdapter/shutterContactAdapter';
 import RotaryHandleTransceiverAdapter from './serviceAdapter/rotaryHandleTransceiverAdapter';
 import AcousticDisplayRecieverAdapter from './serviceAdapter/acousticDisplayRecieverAdapter';
 import KeytransceiverAdapter from './serviceAdapter/keytransceiverAdapter';
-import HoermannGarageDoorAdapter from './serviceAdapter/hoermannGarageDoorAdapter';
+import DoorOpenerAdapter from './serviceAdapter/doorOpenerAdapter';
+import SwitchReceiverAdapter from './serviceAdapter/switchReceiverAdapter';
 
 
 export class CCUJackPlatformAccessory {
@@ -35,15 +36,21 @@ export class CCUJackPlatformAccessory {
   }
 
 
-  private adapterCreation() {
-
-  }
+  //  private adapterCreation() {
+  //
+  //  }
 
   private addServiceAdapters() {
     for (const channel of this.deviceObject.channels) {
       switch (channel.type) {
         case 'MAINTENANCE': {
           this.log.info('Found MAINTENANCE Channel');
+          break;
+        }
+
+        case 'SIMPLE_SWITCH_RECEIVER': {
+          this.log.info('Found SIMPLE_SWITCH_RECEIVER Channel');
+          SwitchReceiverAdapter.newInstance(this, channel);
           break;
         }
 
@@ -61,7 +68,7 @@ export class CCUJackPlatformAccessory {
 
         case 'DOOR_RECEIVER' : {
           this.log.info('Found DOOR_RECEIVER Channel');
-          HoermannGarageDoorAdapter.newInstance(this, channel);
+          DoorOpenerAdapter.newInstance(this, channel);
           break;
         }
 

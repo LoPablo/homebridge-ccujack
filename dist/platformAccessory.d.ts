@@ -7,7 +7,6 @@ export declare class CCUJackPlatformAccessory {
     readonly deviceObject: Device;
     readonly log: Logger;
     constructor(platform: CCUJackPlatform, accessory: PlatformAccessory, deviceObject: Device);
-    private adapterCreation;
     private addServiceAdapters;
 }
 //# sourceMappingURL=platformAccessory.d.ts.map
