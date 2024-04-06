@@ -55,16 +55,14 @@ class Api {
             throw new Error('Request did not return 200, but ' + response.status);
         }
     }
-    async putCommandNumber(subPath, value) {
+    async putComand(subPath, body) {
         this.log.info('Making put with url: ' + 'http://' + this.config.hostname + ':' + this.config.port + '/' + subPath);
         const response = await (0, undici_1.fetch)('http://' + this.config.hostname + ':' + this.config.port + '/' + subPath, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({
-                v: value,
-            }),
+            body: body,
         });
         if (response.ok) {
             this.log.info('Request ok');
@@ -73,6 +71,16 @@ class Api {
         else {
             throw new Error('Request did not return 200, but ' + response.status);
         }
+    }
+    async putCommandNumber(subPath, value) {
+        this.putComand(subPath, JSON.stringify({
+            v: value,
+        }));
+    }
+    async putCommandBoolean(subPath, value) {
+        this.putComand(subPath, JSON.stringify({
+            v: value,
+        }));
     }
     registerNewValueCallback(mqttTopic, callback) {
         this.mqttClient.subscribe(mqttTopic, (err) => {
