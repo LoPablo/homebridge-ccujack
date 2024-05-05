@@ -88,29 +88,28 @@ export default class DoorOpenerAdapter extends serviceAdapter {
 
     if (this.stateTimeout) {
       clearTimeout(this.stateTimeout!);
+      this.log.info('Cleared State Timeout');
     }
 
     if (this.lastStateValue!.value === 0) {
       this.assuemedState = this.platform.Characteristic.CurrentDoorState.CLOSED;
     } else if (this.lastStateValue!.value === 1 || this.lastStateValue.value === 2) {
       this.assuemedState = this.platform.Characteristic.CurrentDoorState.OPEN;
-      if (this.stateTimeout) {
-        clearTimeout(this.stateTimeout!);
-      }
     } else {
       if (previousValue.value === 0) {
         this.assuemedState = this.platform.Characteristic.CurrentDoorState.OPENING;
-      } else if (previousValue.value === 1) {
+      } else if (previousValue.value === 1 || this.lastStateValue.value === 2) {
         this.assuemedState = this.platform.Characteristic.CurrentDoorState.CLOSING;
       } else {
         this.assuemedState = this.platform.Characteristic.CurrentDoorState.STOPPED;
       }
       this.stateTimeout = setTimeout(() => {
+        this.log.info('Timeout for State has been triggerd. Will assume Stopped as new state.');
         this.assuemedState = this.platform.Characteristic.CurrentDoorState.STOPPED;
         this.garageDoorService.updateCharacteristic(this.platform.Characteristic.CurrentDoorState, this.assuemedState);
-      }, 10000);
+      }, 40000);
     }
-
+    this.log.info('Last State was ' + previousValue.value + ' new state is ' + this.lastStateValue!.value + ' therefore assumed state is ' + this.assuemedState);
     this.garageDoorService.updateCharacteristic(this.platform.Characteristic.CurrentDoorState, this.assuemedState);
   }
 
