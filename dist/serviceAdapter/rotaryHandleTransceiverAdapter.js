@@ -7,6 +7,23 @@ const tools_1 = __importDefault(require("../model/tools"));
 const api_1 = __importDefault(require("../api"));
 const serviceAdapter_1 = __importDefault(require("./serviceAdapter"));
 class RotaryHandleTransceiverAdapter extends serviceAdapter_1.default {
+    static async newInstance(ccuJackAccessory, channelObject) {
+        let stateValueParameterSearch;
+        for (const parameter of channelObject.parameters) {
+            if (parameter.id === 'STATE') {
+                stateValueParameterSearch = parameter;
+            }
+        }
+        if (stateValueParameterSearch === null) {
+            ccuJackAccessory.log.info(channelObject.address + ': STATE Parameter is missing for shutterContact. Cannot continue');
+        }
+        else {
+            ccuJackAccessory.log.info(channelObject.address + ': Getting first value via http.');
+            const firstValue = await tools_1.default.getFirstValueOfParameter(channelObject.parent, channelObject.identifier, stateValueParameterSearch.id);
+            ccuJackAccessory.log.info(channelObject.address + ': STATE firstValue ist: ' + JSON.stringify(firstValue));
+            new RotaryHandleTransceiverAdapter(ccuJackAccessory, channelObject, stateValueParameterSearch, firstValue);
+        }
+    }
     constructor(ccuJackAccessory, channelObject, valueParameter, firstValue) {
         super();
         this.platform = ccuJackAccessory.platform;
@@ -25,23 +42,6 @@ class RotaryHandleTransceiverAdapter extends serviceAdapter_1.default {
             .onGet(this.handleContactSensorTiltedStateGet.bind(this));
         this.serviceOpened.getCharacteristic(this.platform.Characteristic.ContactSensorState)
             .onGet(this.handleContactSensorOpenedStateGet.bind(this));
-    }
-    static async newInstance(ccuJackAccessory, channelObject) {
-        let stateValueParameterSearch;
-        for (const parameter of channelObject.parameters) {
-            if (parameter.id === 'STATE') {
-                stateValueParameterSearch = parameter;
-            }
-        }
-        if (stateValueParameterSearch === null) {
-            ccuJackAccessory.log.info(channelObject.address + ': STATE Parameter is missing for shutterContact. Cannot continue');
-        }
-        else {
-            ccuJackAccessory.log.info(channelObject.address + ': Getting first value via http.');
-            const firstValue = await tools_1.default.getFirstValueOfParameter(channelObject.parent, channelObject.identifier, stateValueParameterSearch.id);
-            ccuJackAccessory.log.info(channelObject.address + ': STATE firstValue ist: ' + JSON.stringify(firstValue));
-            new RotaryHandleTransceiverAdapter(ccuJackAccessory, channelObject, stateValueParameterSearch, firstValue);
-        }
     }
     newValue(newValue) {
         this.log.info(this.channelObject.address + ': New Value: ' + JSON.stringify(newValue));

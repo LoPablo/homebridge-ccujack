@@ -7,6 +7,27 @@ const tools_1 = __importDefault(require("../model/tools"));
 const api_1 = __importDefault(require("../api"));
 const serviceAdapter_1 = __importDefault(require("./serviceAdapter"));
 class DoorOpenerAdapter extends serviceAdapter_1.default {
+    static async newInstance(ccuJackAccessory, channelObject) {
+        let commandParameterSearch;
+        let stateParameterSearch;
+        for (const parameter of channelObject.parameters) {
+            if (parameter.id === 'DOOR_COMMAND') {
+                commandParameterSearch = parameter;
+            }
+            if (parameter.id === 'DOOR_STATE') {
+                stateParameterSearch = parameter;
+            }
+        }
+        if (stateParameterSearch === null && commandParameterSearch === null) {
+            ccuJackAccessory.log.info(channelObject.address + ': STATE Parameter or COMMAND Parameter is missing for hörmann garage door opener. Cannot continue');
+        }
+        else {
+            ccuJackAccessory.log.info(channelObject.address + ': Getting first stateValue via http.');
+            const firstValue = await tools_1.default.getFirstValueOfParameter(channelObject.parent, channelObject.identifier, stateParameterSearch.id);
+            ccuJackAccessory.log.info(channelObject.address + ': STATE firstValue ist: ' + JSON.stringify(firstValue));
+            new DoorOpenerAdapter(ccuJackAccessory, channelObject, stateParameterSearch, firstValue, commandParameterSearch);
+        }
+    }
     constructor(ccuJackAccessory, channelObject, stateParameter, firstStateValue, commandParameter) {
         super();
         this.platform = ccuJackAccessory.platform;
@@ -32,27 +53,6 @@ class DoorOpenerAdapter extends serviceAdapter_1.default {
         this.garageDoorService.getCharacteristic(this.platform.Characteristic.TargetDoorState)
             .onGet(this.handleTargetDoorStateGet.bind(this))
             .onSet(this.handleTargetDoorStateSet.bind(this));
-    }
-    static async newInstance(ccuJackAccessory, channelObject) {
-        let commandParameterSearch;
-        let stateParameterSearch;
-        for (const parameter of channelObject.parameters) {
-            if (parameter.id === 'DOOR_COMMAND') {
-                commandParameterSearch = parameter;
-            }
-            if (parameter.id === 'DOOR_STATE') {
-                stateParameterSearch = parameter;
-            }
-        }
-        if (stateParameterSearch === null && commandParameterSearch === null) {
-            ccuJackAccessory.log.info(channelObject.address + ': STATE Parameter or COMMAND Parameter is missing for hörmann garage door opener. Cannot continue');
-        }
-        else {
-            ccuJackAccessory.log.info(channelObject.address + ': Getting first stateValue via http.');
-            const firstValue = await tools_1.default.getFirstValueOfParameter(channelObject.parent, channelObject.identifier, stateParameterSearch.id);
-            ccuJackAccessory.log.info(channelObject.address + ': STATE firstValue ist: ' + JSON.stringify(firstValue));
-            new DoorOpenerAdapter(ccuJackAccessory, channelObject, stateParameterSearch, firstValue, commandParameterSearch);
-        }
     }
     newValue(newValue) {
         this.log.info(this.channelObject.address + ': New Value: ' + JSON.stringify(newValue));

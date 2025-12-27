@@ -6,30 +6,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const api_1 = __importDefault(require("../api"));
 const serviceAdapter_1 = __importDefault(require("./serviceAdapter"));
 class KeytransceiverAdapter extends serviceAdapter_1.default {
-    constructor(ccuJackAccessory, channelObject, stateSinglePress, stateLongPress, stateLongPressStart, stateLongPressRelease) {
-        super();
-        this.platform = ccuJackAccessory.platform;
-        this.accessory = ccuJackAccessory.accessory;
-        this.channelObject = channelObject;
-        this.log = ccuJackAccessory.log;
-        this.lastValueOrigin = stateSinglePress;
-        this.stateSinglePress = stateSinglePress;
-        this.stateLongPress = stateLongPress;
-        this.stateLongPressStart = stateLongPressStart;
-        this.stateLongPressRelease = stateLongPressRelease;
-        this.log.info('{' + ccuJackAccessory.deviceObject.title + ',' + channelObject.title + '}: Registering Value Callbacks for Mqtt.');
-        api_1.default.getInstance().registerNewValueCallback(this.stateSinglePress.mqttStatusTopic, this.newValueSinglePress.bind(this));
-        api_1.default.getInstance().registerNewValueCallback(this.stateLongPress.mqttStatusTopic, this.newValueLongPress.bind(this));
-        api_1.default.getInstance().registerNewValueCallback(this.stateLongPressStart.mqttStatusTopic, this.newValueLongPressStart.bind(this));
-        this.serviceStatelessSwitch = this.accessory.getServiceById(this.platform.Service.StatelessProgrammableSwitch, this.channelObject.title) || this.accessory.addService(new this.platform.Service.StatelessProgrammableSwitch(ccuJackAccessory.deviceObject.title + channelObject.title, this.channelObject.title));
-        this.serviceStatelessSwitch.getCharacteristic(this.platform.Characteristic.ProgrammableSwitchEvent)
-            .onGet(this.handleProgrammableSwitchEventGet.bind(this))
-            .setProps({
-            validValues: [0, 2],
-        });
-        this.serviceStatelessSwitch.getCharacteristic(this.platform.Characteristic.ServiceLabelIndex)
-            .onGet(this.handleServiceLabelIndexGet.bind(this));
-    }
     static async newInstance(ccuJackAccessory, channelObject) {
         let stateSinglePress;
         let stateLongPress;
@@ -62,6 +38,30 @@ class KeytransceiverAdapter extends serviceAdapter_1.default {
         else {
             ccuJackAccessory.log.info("{" + ccuJackAccessory.deviceObject.title + "," + channelObject.title + '}: One Button Parameter is missing for keytransceiver. Cannot continue');
         }
+    }
+    constructor(ccuJackAccessory, channelObject, stateSinglePress, stateLongPress, stateLongPressStart, stateLongPressRelease) {
+        super();
+        this.platform = ccuJackAccessory.platform;
+        this.accessory = ccuJackAccessory.accessory;
+        this.channelObject = channelObject;
+        this.log = ccuJackAccessory.log;
+        this.lastValueOrigin = stateSinglePress;
+        this.stateSinglePress = stateSinglePress;
+        this.stateLongPress = stateLongPress;
+        this.stateLongPressStart = stateLongPressStart;
+        this.stateLongPressRelease = stateLongPressRelease;
+        this.log.info('{' + ccuJackAccessory.deviceObject.title + ',' + channelObject.title + '}: Registering Value Callbacks for Mqtt.');
+        api_1.default.getInstance().registerNewValueCallback(this.stateSinglePress.mqttStatusTopic, this.newValueSinglePress.bind(this));
+        api_1.default.getInstance().registerNewValueCallback(this.stateLongPress.mqttStatusTopic, this.newValueLongPress.bind(this));
+        api_1.default.getInstance().registerNewValueCallback(this.stateLongPressStart.mqttStatusTopic, this.newValueLongPressStart.bind(this));
+        this.serviceStatelessSwitch = this.accessory.getServiceById(this.platform.Service.StatelessProgrammableSwitch, this.channelObject.title) || this.accessory.addService(new this.platform.Service.StatelessProgrammableSwitch(ccuJackAccessory.deviceObject.title + channelObject.title, this.channelObject.title));
+        this.serviceStatelessSwitch.getCharacteristic(this.platform.Characteristic.ProgrammableSwitchEvent)
+            .onGet(this.handleProgrammableSwitchEventGet.bind(this))
+            .setProps({
+            validValues: [0, 2],
+        });
+        this.serviceStatelessSwitch.getCharacteristic(this.platform.Characteristic.ServiceLabelIndex)
+            .onGet(this.handleServiceLabelIndexGet.bind(this));
     }
     handleServiceLabelIndexGet() {
         return Number(this.channelObject.identifier);

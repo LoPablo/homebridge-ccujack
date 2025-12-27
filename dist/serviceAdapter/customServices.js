@@ -5,9 +5,9 @@ const hap_nodejs_1 = require("hap-nodejs");
 class DisplayLine extends hap_nodejs_1.Characteristic {
     constructor() {
         super('Display Line', DisplayLine.UUID, {
-            format: "string" /* STRING */,
-            unit: "seconds" /* SECONDS */,
-            perms: ["pr" /* PAIRED_READ */, "pw" /* PAIRED_WRITE */, "ev" /* NOTIFY */],
+            format: "string" /* Formats.STRING */,
+            unit: "seconds" /* Units.SECONDS */,
+            perms: ["pr" /* Perms.PAIRED_READ */, "pw" /* Perms.PAIRED_WRITE */, "ev" /* Perms.NOTIFY */],
         });
         this.value = this.getDefaultValue();
     }

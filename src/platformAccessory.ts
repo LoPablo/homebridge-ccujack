@@ -7,10 +7,11 @@ import {fetch} from 'undici';
 import Channel from './model/channel';
 import ShutterContactAdapter from './serviceAdapter/shutterContactAdapter';
 import RotaryHandleTransceiverAdapter from './serviceAdapter/rotaryHandleTransceiverAdapter';
-import AcousticDisplayRecieverAdapter from './serviceAdapter/acousticDisplayRecieverAdapter';
+//import AcousticDisplayRecieverAdapter from './serviceAdapter/acousticDisplayRecieverAdapter';
 import KeytransceiverAdapter from './serviceAdapter/keytransceiverAdapter';
 import DoorOpenerAdapter from './serviceAdapter/doorOpenerAdapter';
 import SwitchReceiverAdapter from './serviceAdapter/switchReceiverAdapter';
+import BatteryAdapter from './serviceAdapter/batteryAdapter';
 
 
 export class CCUJackPlatformAccessory {
@@ -45,6 +46,7 @@ export class CCUJackPlatformAccessory {
       switch (channel.type) {
         case 'MAINTENANCE': {
           this.log.info('Found MAINTENANCE Channel');
+          BatteryAdapter.newInstance(this, channel);
           break;
         }
 
@@ -60,11 +62,11 @@ export class CCUJackPlatformAccessory {
           break;
         }
 
-        case 'ACOUSTIC_DISPLAY_RECEIVER': {
-          this.log.info('Found ACOUSTIC_DISPLAY_RECEIVER Channel');
-          AcousticDisplayRecieverAdapter.newInstance(this, channel);
-          break;
-        }
+        //case 'ACOUSTIC_DISPLAY_RECEIVER': {
+        //  this.log.info('Found ACOUSTIC_DISPLAY_RECEIVER Channel');
+        //  AcousticDisplayRecieverAdapter.newInstance(this, channel);
+        //  break;
+        //}
 
         case 'DOOR_RECEIVER' : {
           this.log.info('Found DOOR_RECEIVER Channel');

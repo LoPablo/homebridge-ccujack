@@ -6,10 +6,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CCUJackPlatformAccessory = void 0;
 const shutterContactAdapter_1 = __importDefault(require("./serviceAdapter/shutterContactAdapter"));
 const rotaryHandleTransceiverAdapter_1 = __importDefault(require("./serviceAdapter/rotaryHandleTransceiverAdapter"));
-const acousticDisplayRecieverAdapter_1 = __importDefault(require("./serviceAdapter/acousticDisplayRecieverAdapter"));
+//import AcousticDisplayRecieverAdapter from './serviceAdapter/acousticDisplayRecieverAdapter';
 const keytransceiverAdapter_1 = __importDefault(require("./serviceAdapter/keytransceiverAdapter"));
 const doorOpenerAdapter_1 = __importDefault(require("./serviceAdapter/doorOpenerAdapter"));
 const switchReceiverAdapter_1 = __importDefault(require("./serviceAdapter/switchReceiverAdapter"));
+const batteryAdapter_1 = __importDefault(require("./serviceAdapter/batteryAdapter"));
 class CCUJackPlatformAccessory {
     constructor(platform, accessory, deviceObject) {
         this.platform = platform;
@@ -32,6 +33,7 @@ class CCUJackPlatformAccessory {
             switch (channel.type) {
                 case 'MAINTENANCE': {
                     this.log.info('Found MAINTENANCE Channel');
+                    batteryAdapter_1.default.newInstance(this, channel);
                     break;
                 }
                 case 'SIMPLE_SWITCH_RECEIVER': {
@@ -44,11 +46,11 @@ class CCUJackPlatformAccessory {
                     keytransceiverAdapter_1.default.newInstance(this, channel);
                     break;
                 }
-                case 'ACOUSTIC_DISPLAY_RECEIVER': {
-                    this.log.info('Found ACOUSTIC_DISPLAY_RECEIVER Channel');
-                    acousticDisplayRecieverAdapter_1.default.newInstance(this, channel);
-                    break;
-                }
+                //case 'ACOUSTIC_DISPLAY_RECEIVER': {
+                //  this.log.info('Found ACOUSTIC_DISPLAY_RECEIVER Channel');
+                //  AcousticDisplayRecieverAdapter.newInstance(this, channel);
+                //  break;
+                //}
                 case 'DOOR_RECEIVER': {
                     this.log.info('Found DOOR_RECEIVER Channel');
                     doorOpenerAdapter_1.default.newInstance(this, channel);

@@ -7,21 +7,6 @@ const tools_1 = __importDefault(require("../model/tools"));
 const api_1 = __importDefault(require("../api"));
 const serviceAdapter_1 = __importDefault(require("./serviceAdapter"));
 class ShutterContactAdapter extends serviceAdapter_1.default {
-    constructor(ccuJackAccessory, channelObject, valueParameter, firstValue) {
-        super();
-        this.platform = ccuJackAccessory.platform;
-        this.accessory = ccuJackAccessory.accessory;
-        this.channelObject = channelObject;
-        this.log = ccuJackAccessory.log;
-        this.valueParameter = valueParameter;
-        this.lastValue = firstValue;
-        this.service = this.accessory.getService(this.platform.Service.ContactSensor) || this.accessory.addService(this.platform.Service.ContactSensor);
-        this.service.setCharacteristic(this.platform.Characteristic.Name, channelObject.title);
-        this.log.info('{' + ccuJackAccessory.deviceObject.title + ',' + channelObject.title + '}: Registering Value Callback for Mqtt.');
-        api_1.default.getInstance().registerNewValueCallback(this.valueParameter.mqttStatusTopic, this.newValue.bind(this));
-        this.service.getCharacteristic(this.platform.Characteristic.ContactSensorState)
-            .onGet(this.handleContactSensorStateGet.bind(this));
-    }
     static async newInstance(ccuJackAccessory, channelObject) {
         let stateValueParameterSearch;
         for (const parameter of channelObject.parameters) {
@@ -38,6 +23,21 @@ class ShutterContactAdapter extends serviceAdapter_1.default {
             ccuJackAccessory.log.info('{' + ccuJackAccessory.deviceObject.title + ',' + channelObject.title + '}: STATE firstValue is: ' + JSON.stringify(firstValue));
             new ShutterContactAdapter(ccuJackAccessory, channelObject, stateValueParameterSearch, firstValue);
         }
+    }
+    constructor(ccuJackAccessory, channelObject, valueParameter, firstValue) {
+        super();
+        this.platform = ccuJackAccessory.platform;
+        this.accessory = ccuJackAccessory.accessory;
+        this.channelObject = channelObject;
+        this.log = ccuJackAccessory.log;
+        this.valueParameter = valueParameter;
+        this.lastValue = firstValue;
+        this.service = this.accessory.getService(this.platform.Service.ContactSensor) || this.accessory.addService(this.platform.Service.ContactSensor);
+        this.service.setCharacteristic(this.platform.Characteristic.Name, channelObject.title);
+        this.log.info('{' + ccuJackAccessory.deviceObject.title + ',' + channelObject.title + '}: Registering Value Callback for Mqtt.');
+        api_1.default.getInstance().registerNewValueCallback(this.valueParameter.mqttStatusTopic, this.newValue.bind(this));
+        this.service.getCharacteristic(this.platform.Characteristic.ContactSensorState)
+            .onGet(this.handleContactSensorStateGet.bind(this));
     }
     newValue(newValue) {
         this.log.info(this.channelObject.address + ': New Value: ' + JSON.stringify(newValue));
