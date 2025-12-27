@@ -47,13 +47,14 @@ export default class BatteryAdapter extends serviceAdapter {
     Api.getInstance().registerNewValueCallback(this.valueParameter!.mqttStatusTopic!, this.newValue.bind(this));
     this.service.getCharacteristic(this.platform.Characteristic.StatusLowBattery)
       .onGet(this.handleStatusLowBatteryGet.bind(this));
+    this.log.info("BATTERY IS: ", this.lastValue.value);
   }
 
   newValue(newValue : Value) {
     this.log.info(this.channelObject.address + ': New Value: ' + JSON.stringify(newValue));
     this.lastValue = newValue;
 
-    if (this.lastValue!.value === 0){
+    if (this.lastValue!.value === false){
       this.service.updateCharacteristic(this.platform.Characteristic.StatusLowBattery, this.platform.Characteristic.StatusLowBattery.BATTERY_LEVEL_NORMAL);
     }else{
       this.service.updateCharacteristic(this.platform.Characteristic.StatusLowBattery, this.platform.Characteristic.StatusLowBattery.BATTERY_LEVEL_LOW);
@@ -63,7 +64,7 @@ export default class BatteryAdapter extends serviceAdapter {
   handleStatusLowBatteryGet() {
     this.log.debug('Triggered GET StatusLowBattery Get');
 
-    if (this.lastValue!.value === 0){
+    if (this.lastValue!.value === false){
       return this.platform.Characteristic.StatusLowBattery.BATTERY_LEVEL_NORMAL;
     }else{
       return this.platform.Characteristic.StatusLowBattery.BATTERY_LEVEL_LOW;
