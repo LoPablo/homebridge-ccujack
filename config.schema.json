@@ -9,7 +9,19 @@
         "title": "Name",
         "type": "string",
         "required": true,
-        "default": "Example Dynamic Platform"
+        "default": "HmIP"
+      },
+      "hostname": {
+        "title": "Host",
+        "type": "string",
+        "required": true,
+        "default": "192.168.2.1"
+      },
+      "port": {
+        "title": "Port",
+        "type": "int",
+        "required": true,
+        "default": 2121
       }
     }
   }
