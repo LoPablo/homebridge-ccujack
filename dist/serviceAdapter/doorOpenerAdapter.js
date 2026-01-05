@@ -38,11 +38,11 @@ class DoorOpenerAdapter extends serviceAdapter_1.default {
         this.lastStateValue = firstStateValue;
         this.commandParameter = commandParameter;
         if (this.lastStateValue.value === 0) {
-            this.assuemedState = this.platform.Characteristic.CurrentDoorState.CLOSED;
+            this.assumedState = this.platform.Characteristic.CurrentDoorState.CLOSED;
             this.assumedTargetState = this.platform.Characteristic.TargetDoorState.CLOSED;
         }
         else {
-            this.assuemedState = this.platform.Characteristic.CurrentDoorState.OPEN;
+            this.assumedState = this.platform.Characteristic.CurrentDoorState.OPEN;
             this.assumedTargetState = this.platform.Characteristic.TargetDoorState.OPEN;
         }
         this.log.info(channelObject.address + ': Registering Value Callback for Mqtt.');
@@ -54,6 +54,8 @@ class DoorOpenerAdapter extends serviceAdapter_1.default {
             .onGet(this.handleTargetDoorStateGet.bind(this))
             .onSet(this.handleTargetDoorStateSet.bind(this));
     }
+    parseAndSetValue(value) {
+    }
     newValue(newValue) {
         this.log.info(this.channelObject.address + ': New Value: ' + JSON.stringify(newValue));
         const previousValue = this.lastStateValue;
@@ -63,37 +65,44 @@ class DoorOpenerAdapter extends serviceAdapter_1.default {
             this.log.info('Cleared State Timeout');
         }
         if (this.lastStateValue.value === 0) {
-            this.assuemedState = this.platform.Characteristic.CurrentDoorState.CLOSED;
+            this.assumedState = this.platform.Characteristic.CurrentDoorState.CLOSED;
+            this.log.info('New Value is closed, therefore assumed state is closed.');
         }
         else if (this.lastStateValue.value === 1 || this.lastStateValue.value === 2) {
-            this.assuemedState = this.platform.Characteristic.CurrentDoorState.OPEN;
+            this.assumedState = this.platform.Characteristic.CurrentDoorState.OPEN;
+            this.log.info('New Value is open or venting (' + this.lastStateValue + ') , therefore assumed state is open.');
         }
-        else {
+        else if (this.lastStateValue.value === 3) {
+            this.log.info('New Value is unknown position, see next message for more info...');
             if (previousValue.value === 0) {
-                this.assuemedState = this.platform.Characteristic.CurrentDoorState.OPENING;
+                this.assumedState = this.platform.Characteristic.CurrentDoorState.OPENING;
+                this.log.info('...old Value was closed, lets assume we are opening');
             }
-            else if (previousValue.value === 1 || this.lastStateValue.value === 2) {
-                this.assuemedState = this.platform.Characteristic.CurrentDoorState.CLOSING;
+            else if (previousValue.value === 1 || previousValue.value === 2) {
+                this.assumedState = this.platform.Characteristic.CurrentDoorState.CLOSING;
+                this.log.info('...old Value was opened or tilted (' + this.lastStateValue + ') lets assume we are closing');
             }
             else {
-                this.assuemedState = this.platform.Characteristic.CurrentDoorState.STOPPED;
+                //this.assumedState = this.platform.Characteristic.CurrentDoorState.STOPPED;
+                this.assumedState = this.platform.Characteristic.CurrentDoorState.OPEN;
+                this.log.info('... dont know Unknown position assuming open');
             }
-            this.stateTimeout = setTimeout(() => {
-                this.log.info('Timeout for State has been triggerd. Will assume Stopped as new state.');
-                this.assuemedState = this.platform.Characteristic.CurrentDoorState.STOPPED;
-                this.garageDoorService.updateCharacteristic(this.platform.Characteristic.CurrentDoorState, this.assuemedState);
+            this.stateTimeout = setTimeout(async () => {
+                this.log.info('Timeout for State has been triggered. Trying http next');
+                const newStateValue = await tools_1.default.getFirstValueOfParameter(this.channelObject.parent, this.channelObject.identifier, this.stateParameter.id);
+                this.newValue(newStateValue);
             }, 40000);
         }
-        this.log.info('Last State was ' + previousValue.value + ' new state is ' + this.lastStateValue.value + ' therefore assumed state is ' + this.assuemedState);
-        this.garageDoorService.updateCharacteristic(this.platform.Characteristic.CurrentDoorState, this.assuemedState);
+        //this.log.info('Last State was ' + previousValue.value + ' new state is ' + this.lastStateValue!.value + ' therefore assumed state is ' + this.assumedState);
+        this.garageDoorService.updateCharacteristic(this.platform.Characteristic.CurrentDoorState, this.assumedState);
     }
     newAssumedState(assumedState) {
-        this.assuemedState = assumedState;
-        this.garageDoorService.updateCharacteristic(this.platform.Characteristic.CurrentDoorState, this.assuemedState);
+        this.assumedState = assumedState;
+        this.garageDoorService.updateCharacteristic(this.platform.Characteristic.CurrentDoorState, this.assumedState);
     }
     handleCurrentDoorStateGet() {
         this.log.debug('Triggered GET CurrentDoorState');
-        return this.assuemedState;
+        return this.assumedState;
     }
     handleTargetDoorStateGet() {
         this.log.debug('Triggered GET TargetDoorState');
@@ -103,11 +112,15 @@ class DoorOpenerAdapter extends serviceAdapter_1.default {
         this.log.debug('Triggered SET TargetDoorState: ' + value);
         if (value === this.platform.Characteristic.TargetDoorState.CLOSED) {
             this.assumedTargetState = this.platform.Characteristic.TargetDoorState.CLOSED;
+            this.assumedState = this.platform.Characteristic.CurrentDoorState.CLOSING;
             api_1.default.getInstance().putCommandNumber('device/' + this.channelObject.parent + '/' + this.channelObject.identifier + '/' + this.commandParameter.id + '/~pv', 3);
+            this.garageDoorService.updateCharacteristic(this.platform.Characteristic.CurrentDoorState, this.assumedState);
         }
         else if (value === this.platform.Characteristic.TargetDoorState.OPEN) {
             this.assumedTargetState = this.platform.Characteristic.TargetDoorState.OPEN;
+            this.assumedState = this.platform.Characteristic.CurrentDoorState.OPENING;
             api_1.default.getInstance().putCommandNumber('device/' + this.channelObject.parent + '/' + this.channelObject.identifier + '/' + this.commandParameter.id + '/~pv', 1);
+            this.garageDoorService.updateCharacteristic(this.platform.Characteristic.CurrentDoorState, this.assumedState);
         }
     }
 }

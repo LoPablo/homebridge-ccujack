@@ -13,11 +13,12 @@ export default class DoorOpenerAdapter extends serviceAdapter {
     private commandParameter;
     private stateParameter;
     private lastStateValue;
-    private assuemedState;
+    private assumedState;
     private assumedTargetState;
     private stateTimeout?;
     static newInstance(ccuJackAccessory: CCUJackPlatformAccessory, channelObject: Channel): Promise<void>;
     private constructor();
+    parseAndSetValue(value: Value): void;
     newValue(newValue: Value): void;
     newAssumedState(assumedState: number): void;
     handleCurrentDoorStateGet(): number;
