@@ -16,6 +16,7 @@ export default class DoorOpenerAdapter extends serviceAdapter {
     private assumedState;
     private assumedTargetState;
     private stateTimeout?;
+    private debounceTimeout?;
     static newInstance(ccuJackAccessory: CCUJackPlatformAccessory, channelObject: Channel): Promise<void>;
     private constructor();
     parseAndSetValue(value: Value): void;

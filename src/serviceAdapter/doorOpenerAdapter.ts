@@ -24,7 +24,7 @@ export default class DoorOpenerAdapter extends serviceAdapter {
   private assumedTargetState: number;
 
   private stateTimeout?: ReturnType<typeof setTimeout>;
-
+  private debounceTimeout?: ReturnType<typeof setTimeout>;
 
   static async newInstance(ccuJackAccessory: CCUJackPlatformAccessory, channelObject: Channel) {
     let commandParameterSearch: Parameter;
@@ -142,19 +142,26 @@ export default class DoorOpenerAdapter extends serviceAdapter {
   }
 
   handleTargetDoorStateSet(value: CharacteristicValue) {
-    this.log.debug('Triggered SET TargetDoorState: ' + value);
-    if (value === this.platform.Characteristic.TargetDoorState.CLOSED) {
-      this.assumedTargetState = this.platform.Characteristic.TargetDoorState.CLOSED;
-      this.assumedState = this.platform.Characteristic.CurrentDoorState.CLOSING;
+    if (this.debounceTimeout) {
+      this.log.info('Set State Debounce Timeout');
+    } else {
+      this.log.debug('Triggered SET TargetDoorState: ' + value);
+      this.debounceTimeout = setTimeout(async () => {
+        this.log.info('Debounce Timeout timed out');
+      }, 1000);
+      if (value === this.platform.Characteristic.TargetDoorState.CLOSED) {
+        this.assumedTargetState = this.platform.Characteristic.TargetDoorState.CLOSED;
+        this.assumedState = this.platform.Characteristic.CurrentDoorState.CLOSING;
 
-      Api.getInstance().putCommandNumber('device/' + this.channelObject.parent + '/' + this.channelObject.identifier + '/' + this.commandParameter.id + '/~pv', 3);
-      this.garageDoorService.updateCharacteristic(this.platform.Characteristic.CurrentDoorState, this.assumedState);
-    } else if (value === this.platform.Characteristic.TargetDoorState.OPEN) {
-      this.assumedTargetState = this.platform.Characteristic.TargetDoorState.OPEN;
-      this.assumedState = this.platform.Characteristic.CurrentDoorState.OPENING;
+        Api.getInstance().putCommandNumber('device/' + this.channelObject.parent + '/' + this.channelObject.identifier + '/' + this.commandParameter.id + '/~pv', 3);
+        this.garageDoorService.updateCharacteristic(this.platform.Characteristic.CurrentDoorState, this.assumedState);
+      } else if (value === this.platform.Characteristic.TargetDoorState.OPEN) {
+        this.assumedTargetState = this.platform.Characteristic.TargetDoorState.OPEN;
+        this.assumedState = this.platform.Characteristic.CurrentDoorState.OPENING;
 
-      Api.getInstance().putCommandNumber('device/' + this.channelObject.parent + '/' + this.channelObject.identifier + '/' + this.commandParameter.id + '/~pv', 1);
-      this.garageDoorService.updateCharacteristic(this.platform.Characteristic.CurrentDoorState, this.assumedState);
+        Api.getInstance().putCommandNumber('device/' + this.channelObject.parent + '/' + this.channelObject.identifier + '/' + this.commandParameter.id + '/~pv', 1);
+        this.garageDoorService.updateCharacteristic(this.platform.Characteristic.CurrentDoorState, this.assumedState);
+      }
     }
   }
 
