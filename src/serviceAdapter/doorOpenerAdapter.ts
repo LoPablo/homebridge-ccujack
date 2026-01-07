@@ -93,6 +93,7 @@ export default class DoorOpenerAdapter extends serviceAdapter {
     if (this.stateTimeout) {
       clearTimeout(this.stateTimeout!);
       this.log.info('Cleared State Timeout');
+      this.stateTimeout = undefined;
     }
 
     if (this.lastStateValue!.value === 0) {
@@ -151,6 +152,7 @@ export default class DoorOpenerAdapter extends serviceAdapter {
         this.log.info('Debounce Timeout timed out');
         this.log.info('Debounce Timeout timed out');
         clearTimeout(this.debounceTimeout!);
+        this.debounceTimeout = undefined;
       }, 1000);
       if (value === this.platform.Characteristic.TargetDoorState.CLOSED) {
         this.assumedTargetState = this.platform.Characteristic.TargetDoorState.CLOSED;
