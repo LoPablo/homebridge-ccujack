@@ -143,11 +143,12 @@ export default class DoorOpenerAdapter extends serviceAdapter {
 
   handleTargetDoorStateSet(value: CharacteristicValue) {
     if (this.debounceTimeout) {
-      this.log.info('Set State Debounce Timeout');
+      this.log.info('Await State Debounce Timeout');
     } else {
-      this.log.debug('Triggered SET TargetDoorState: ' + value);
+      this.log.info('Triggered SET TargetDoorState: ' + value);
       this.debounceTimeout = setTimeout(async () => {
         this.log.info('Debounce Timeout timed out');
+        clearTimeout(this.debounceTimeout!);
       }, 1000);
       if (value === this.platform.Characteristic.TargetDoorState.CLOSED) {
         this.assumedTargetState = this.platform.Characteristic.TargetDoorState.CLOSED;
