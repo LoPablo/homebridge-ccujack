@@ -10,20 +10,28 @@ export default class DoorOpenerAdapter extends serviceAdapter {
     readonly channelObject: Channel;
     readonly log: Logger;
     private garageDoorService;
+    private ventingSwitchService;
     private commandParameter;
     private stateParameter;
-    private lastStateValue;
+    private sectionParameter;
+    private stateValue;
+    private sectionValue;
     private assumedState;
     private assumedTargetState;
     private stateTimeout?;
     private debounceTimeout?;
     static newInstance(ccuJackAccessory: CCUJackPlatformAccessory, channelObject: Channel): Promise<void>;
     private constructor();
-    parseAndSetValue(value: Value): void;
-    newValue(newValue: Value): void;
-    newAssumedState(assumedState: number): void;
+    convertValuesToAssumedStates(): void;
+    newSectionValue(newSectionValue: Value): void;
+    newStateValue(newValue: Value): void;
     handleCurrentDoorStateGet(): number;
     handleTargetDoorStateGet(): number;
+    handleOnGet(): 1 | 0;
+    /**
+     * Handle requests to set the "On" characteristic
+     */
+    handleOnSet(value: CharacteristicValue): void;
     handleTargetDoorStateSet(value: CharacteristicValue): void;
 }
 //# sourceMappingURL=doorOpenerAdapter.d.ts.map
