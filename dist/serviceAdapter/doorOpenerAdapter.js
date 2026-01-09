@@ -57,15 +57,15 @@ class DoorOpenerAdapter extends serviceAdapter_1.default {
         api_1.default.getInstance().registerNewValueCallback(this.stateParameter.mqttStatusTopic, this.newStateValue.bind(this));
         api_1.default.getInstance().registerNewValueCallback(this.sectionParameter.mqttStatusTopic, this.newSectionValue.bind(this));
         this.garageDoorService = this.accessory.getService(this.platform.Service.GarageDoorOpener) || this.accessory.addService(this.platform.Service.GarageDoorOpener);
-        this.ventingSwitchService = this.accessory.getService(this.platform.Service.Switch) || this.accessory.addService(this.platform.Service.Switch);
+        //this.ventingSwitchService = this.accessory.getService(this.platform.Service.Switch) || this.accessory.addService(this.platform.Service.Switch);
         this.garageDoorService.getCharacteristic(this.platform.Characteristic.CurrentDoorState)
             .onGet(this.handleCurrentDoorStateGet.bind(this));
         this.garageDoorService.getCharacteristic(this.platform.Characteristic.TargetDoorState)
             .onGet(this.handleTargetDoorStateGet.bind(this))
             .onSet(this.handleTargetDoorStateSet.bind(this));
-        this.ventingSwitchService.getCharacteristic(this.platform.Characteristic.On)
-            .onGet(this.handleOnGet.bind(this))
-            .onSet(this.handleOnSet.bind(this));
+        //this.ventingSwitchService.getCharacteristic(this.platform.Characteristic.On)
+        //  .onGet(this.handleOnGet.bind(this))
+        //  .onSet(this.handleOnSet.bind(this));
     }
     convertValuesToAssumedStates() {
         if (this.stateValue.value === 0) {
@@ -98,7 +98,7 @@ class DoorOpenerAdapter extends serviceAdapter_1.default {
         this.convertValuesToAssumedStates();
     }
     newStateValue(newValue) {
-        this.sectionValue = newValue;
+        this.stateValue = newValue;
         this.log.info('New State Value: ' + JSON.stringify(newValue));
         this.convertValuesToAssumedStates();
     }

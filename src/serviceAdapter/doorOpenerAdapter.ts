@@ -17,7 +17,7 @@ export default class DoorOpenerAdapter extends serviceAdapter {
   public readonly log: Logger;
 
   private garageDoorService: Service;
-  private ventingSwitchService: Service;
+  //private ventingSwitchService: Service;
 
   private commandParameter: Parameter;
   private stateParameter: Parameter;
@@ -87,7 +87,7 @@ export default class DoorOpenerAdapter extends serviceAdapter {
     Api.getInstance().registerNewValueCallback(this.sectionParameter!.mqttStatusTopic!, this.newSectionValue.bind(this));
 
     this.garageDoorService = this.accessory.getService(this.platform.Service.GarageDoorOpener) || this.accessory.addService(this.platform.Service.GarageDoorOpener);
-    this.ventingSwitchService = this.accessory.getService(this.platform.Service.Switch) || this.accessory.addService(this.platform.Service.Switch);
+    //this.ventingSwitchService = this.accessory.getService(this.platform.Service.Switch) || this.accessory.addService(this.platform.Service.Switch);
 
 
     this.garageDoorService.getCharacteristic(this.platform.Characteristic.CurrentDoorState)
@@ -97,9 +97,9 @@ export default class DoorOpenerAdapter extends serviceAdapter {
       .onGet(this.handleTargetDoorStateGet.bind(this))
       .onSet(this.handleTargetDoorStateSet.bind(this));
 
-    this.ventingSwitchService.getCharacteristic(this.platform.Characteristic.On)
-        .onGet(this.handleOnGet.bind(this))
-        .onSet(this.handleOnSet.bind(this));
+    //this.ventingSwitchService.getCharacteristic(this.platform.Characteristic.On)
+    //  .onGet(this.handleOnGet.bind(this))
+    //  .onSet(this.handleOnSet.bind(this));
 
   }
 
@@ -134,7 +134,7 @@ export default class DoorOpenerAdapter extends serviceAdapter {
   }
 
   newStateValue(newValue: Value) {
-    this.sectionValue = newValue;
+    this.stateValue = newValue;
     this.log.info('New State Value: ' + JSON.stringify(newValue));
     this.convertValuesToAssumedStates();
   }
