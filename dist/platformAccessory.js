@@ -11,6 +11,7 @@ const keytransceiverAdapter_1 = __importDefault(require("./serviceAdapter/keytra
 const doorOpenerAdapter_1 = __importDefault(require("./serviceAdapter/doorOpenerAdapter"));
 const switchReceiverAdapter_1 = __importDefault(require("./serviceAdapter/switchReceiverAdapter"));
 const batteryAdapter_1 = __importDefault(require("./serviceAdapter/batteryAdapter"));
+const opticalSignalReceiverAdapter_1 = __importDefault(require("./serviceAdapter/opticalSignalReceiverAdapter"));
 class CCUJackPlatformAccessory {
     constructor(platform, accessory, deviceObject) {
         this.platform = platform;
@@ -68,6 +69,7 @@ class CCUJackPlatformAccessory {
                 }
                 case 'OPTICAL_SIGNAL_RECEIVER': {
                     this.log.info('Found OPTICAL_SIGNAL_RECEIVER Channel');
+                    opticalSignalReceiverAdapter_1.default.newInstance(this, channel);
                 }
             }
         }

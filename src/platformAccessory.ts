@@ -12,6 +12,7 @@ import KeytransceiverAdapter from './serviceAdapter/keytransceiverAdapter';
 import DoorOpenerAdapter from './serviceAdapter/doorOpenerAdapter';
 import SwitchReceiverAdapter from './serviceAdapter/switchReceiverAdapter';
 import BatteryAdapter from './serviceAdapter/batteryAdapter';
+import OpticalSignalReceiverAdapter from './serviceAdapter/opticalSignalReceiverAdapter';
 
 
 export class CCUJackPlatformAccessory {
@@ -88,6 +89,7 @@ export class CCUJackPlatformAccessory {
 
         case 'OPTICAL_SIGNAL_RECEIVER': {
           this.log.info('Found OPTICAL_SIGNAL_RECEIVER Channel');
+          OpticalSignalReceiverAdapter.newInstance(this, channel);
         }
       }
     }

@@ -10,7 +10,6 @@ export default class DoorOpenerAdapter extends serviceAdapter {
     readonly channelObject: Channel;
     readonly log: Logger;
     private garageDoorService;
-    private ventingSwitchService;
     private commandParameter;
     private stateParameter;
     private sectionParameter;

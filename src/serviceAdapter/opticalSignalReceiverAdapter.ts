@@ -39,11 +39,11 @@ export default class OpticalSignalReceiverAdapter extends serviceAdapter {
       if (parameter.id === 'COLOR_BEHAVIOUR') {
         colorBehaviorParameterSearch = parameter;
       }
-      if (parameter.id === ' LEVEL') {
+      if (parameter.id === 'LEVEL') {
         levelParameterSearch = parameter;
       }
     }
-    if (colorParameterSearch! === null && colorBehaviorParameterSearch! === null && levelParameterSearch! === null) {
+    if (colorParameterSearch! === undefined && colorBehaviorParameterSearch! === undefined && levelParameterSearch! === undefined) {
       ccuJackAccessory.log.info(channelObject.address + ': COLOR, COLOR_BEHAVIOR or LEVEL Parameter is missing for switch light. Cannot continue');
     } else {
       ccuJackAccessory.log.info(channelObject.address + ': Getting first stateValue via http.');
