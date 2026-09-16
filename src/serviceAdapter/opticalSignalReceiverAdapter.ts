@@ -81,7 +81,7 @@ export default class OpticalSignalReceiverAdapter extends serviceAdapter {
 
 
 
-    this.colorLightService = this.accessory.getService(this.platform.Service.Lightbulb) || this.accessory.addService(this.platform.Service.Lightbulb);
+    this.colorLightService = this.accessory.getServiceById(this.platform.Service.Lightbulb, this.channelObject.title) || this.accessory.addService(this.platform.Service.Lightbulb, this.channelObject.title);
 
 
     this.colorLightService.getCharacteristic(this.platform.Characteristic.On)

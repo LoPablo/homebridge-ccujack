@@ -52,7 +52,7 @@ class OpticalSignalReceiverAdapter extends serviceAdapter_1.default {
         api_1.default.getInstance().registerNewValueCallback(this.colorParameter.mqttStatusTopic, this.newColorValue.bind(this));
         api_1.default.getInstance().registerNewValueCallback(this.colorBehaviorParameter.mqttStatusTopic, this.newColorBehaviorValue.bind(this));
         api_1.default.getInstance().registerNewValueCallback(this.levelParameter.mqttStatusTopic, this.newLevelValue.bind(this));
-        this.colorLightService = this.accessory.getService(this.platform.Service.Lightbulb) || this.accessory.addService(this.platform.Service.Lightbulb);
+        this.colorLightService = this.accessory.getServiceById(this.platform.Service.Lightbulb, this.channelObject.title) || this.accessory.addService(this.platform.Service.Lightbulb, this.channelObject.title);
         this.colorLightService.getCharacteristic(this.platform.Characteristic.On)
             .onGet(this.handleOnGet.bind(this))
             .onSet(this.handleOnSet.bind(this));
