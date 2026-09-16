@@ -72,15 +72,15 @@ class OpticalSignalReceiverAdapter extends serviceAdapter_1.default {
     handleOnGet() {
         this.log.debug('Triggered GET');
         if (this.colorValue.value >= 1) {
-            return 1;
+            return true;
         }
         else {
-            return 0;
+            return false;
         }
     }
     handleOnSet(value) {
         this.log.info('Triggered SET: ' + value);
-        if (value === 1) {
+        if (value === true) {
             api_1.default.getInstance().putCommandNumber('device/' + this.channelObject.parent + '/' + this.channelObject.identifier + '/' + this.colorBehaviorParameter.id + '/~pv', 1);
         }
         else {

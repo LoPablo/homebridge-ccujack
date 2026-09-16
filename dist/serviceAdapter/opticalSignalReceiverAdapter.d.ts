@@ -21,7 +21,7 @@ export default class OpticalSignalReceiverAdapter extends serviceAdapter {
     newColorValue(newColorValue: Value): void;
     newColorBehaviorValue(newColorBehaviorValue: Value): void;
     newLevelValue(newLevelValue: Value): void;
-    handleOnGet(): 1 | 0;
+    handleOnGet(): boolean;
     handleOnSet(value: CharacteristicValue): void;
 }
 //# sourceMappingURL=opticalSignalReceiverAdapter.d.ts.map
