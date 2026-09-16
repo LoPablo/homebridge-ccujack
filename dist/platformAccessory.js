@@ -66,6 +66,9 @@ class CCUJackPlatformAccessory {
                     rotaryHandleTransceiverAdapter_1.default.newInstance(this, channel);
                     break;
                 }
+                case 'OPTICAL_SIGNAL_RECEIVER': {
+                    this.log.info('Found OPTICAL_SIGNAL_RECEIVER Channel');
+                }
             }
         }
     }

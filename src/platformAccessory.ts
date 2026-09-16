@@ -86,6 +86,9 @@ export class CCUJackPlatformAccessory {
           break;
         }
 
+        case 'OPTICAL_SIGNAL_RECEIVER': {
+          this.log.info('Found OPTICAL_SIGNAL_RECEIVER Channel');
+        }
       }
     }
 
