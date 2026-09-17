@@ -75,6 +75,13 @@ export default class OpticalSignalReceiverAdapter extends serviceAdapter {
 
     this.log.info(channelObject.address + ': Registering Value Callback for Mqtt.');
 
+    if (this.colorValue.value === 0) {
+      Api.getInstance().putCommandNumber('device/' + this.channelObject.parent + '/' + this.channelObject.identifier + '/' + this.colorParameter.id + '/~pv', 1);
+    }
+    if (this.levelValue.value === 0) {
+      Api.getInstance().putCommandNumber('device/' + this.channelObject.parent + '/' + this.channelObject.identifier + '/' + this.colorParameter.id + '/~pv', 1);
+    }
+
     Api.getInstance().registerNewValueCallback(this.colorParameter!.mqttStatusTopic!, this.newColorValue.bind(this));
     Api.getInstance().registerNewValueCallback(this.colorBehaviorParameter!.mqttStatusTopic!, this.newColorBehaviorValue.bind(this));
     Api.getInstance().registerNewValueCallback(this.levelParameter!.mqttStatusTopic!, this.newLevelValue.bind(this));
@@ -88,6 +95,19 @@ export default class OpticalSignalReceiverAdapter extends serviceAdapter {
       .onGet(this.handleOnGet.bind(this))
       .onSet(this.handleOnSet.bind(this));
 
+    this.colorLightService.getCharacteristic(this.platform.Characteristic.Brightness)
+      .onSet(this.handleBrightnessSet.bind(this))
+      .onGet(this.handleBrightnessGet.bind(this));
+
+   // this.service.getCharacteristic(this.platform.Characteristic.Hue)
+   //   .onSet(this.handleHueSet.bind(this))
+    //  .onGet(this.handleHueGet.bind(this));
+
+    //this.service.getCharacteristic(this.platform.Characteristic.Saturation)
+     // .onSet(this.handleSaturationSet.bind(this))
+     // .onGet(this.handleSaturationGet.bind(this));
+
+
   }
 
   newColorValue(newColorValue: Value): void {
@@ -98,24 +118,36 @@ export default class OpticalSignalReceiverAdapter extends serviceAdapter {
   newColorBehaviorValue(newColorBehaviorValue: Value): void {
     this.colorValue = newColorBehaviorValue;
     this.log.info('New ColorBehavior Value: ' + JSON.stringify(newColorBehaviorValue));
+    if (this.colorBehaviorValue.value >= 1) {
+      this.colorLightService.updateCharacteristic(this.platform.Characteristic.On, true);
+    } else {
+      this.colorLightService.updateCharacteristic(this.platform.Characteristic.On, false);
+    }
   }
 
   newLevelValue(newLevelValue: Value): void {
     this.colorValue = newLevelValue;
     this.log.info('New Level Value: ' + JSON.stringify(newLevelValue));
+    this.colorLightService.updateCharacteristic(this.platform.Characteristic.Brightness, Number(newLevelValue.value) * 100);
   }
 
   handleOnGet() {
-    this.log.debug('Triggered GET');
-    if (this.colorValue!.value >= 1) {
-      return true;
-    } else {
-      return false;
-    }
+    this.log.debug('Triggered GET On');
+    return this.colorValue!.value >= 1;
   }
 
+  handleBrightnessGet() {
+    this.log.debug('Triggered GET Brightness');
+    return Number(this.levelValue!.value)*100;
+  }
+
+  handleBrightnessSet(value : CharacteristicValue) {
+    this.log.info('Triggered SET Brightness: '+ value);
+    Api.getInstance().putCommandNumber('device/' + this.channelObject.parent + '/' + this.channelObject.identifier + '/' + this.levelParameter.id + '/~pv', Number(value)/100);
+}
+
   handleOnSet(value : CharacteristicValue) {
-    this.log.info('Triggered SET: '+ value);
+    this.log.info('Triggered SET On: '+ value);
     if (value === true) {
       Api.getInstance().putCommandNumber('device/' + this.channelObject.parent + '/' + this.channelObject.identifier + '/' + this.colorBehaviorParameter.id + '/~pv', 1);
     } else {
