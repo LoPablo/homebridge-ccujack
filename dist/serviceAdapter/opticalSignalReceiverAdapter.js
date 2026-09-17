@@ -96,7 +96,7 @@ class OpticalSignalReceiverAdapter extends serviceAdapter_1.default {
         return this.colorValue.value >= 1;
     }
     handleBrightnessGet() {
-        this.log.debug('Triggered GET Brightness');
+        this.log.debug('Triggered GET Brightness Number(this.levelValue!.value)*100;');
         return Number(this.levelValue.value) * 100;
     }
     handleBrightnessSet(value) {

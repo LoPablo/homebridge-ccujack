@@ -137,7 +137,7 @@ export default class OpticalSignalReceiverAdapter extends serviceAdapter {
   }
 
   handleBrightnessGet() {
-    this.log.debug('Triggered GET Brightness');
+    this.log.debug('Triggered GET Brightness Number(this.levelValue!.value)*100;');
     return Number(this.levelValue!.value)*100;
   }
 
