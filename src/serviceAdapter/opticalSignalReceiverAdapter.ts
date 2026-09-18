@@ -126,7 +126,7 @@ export default class OpticalSignalReceiverAdapter extends serviceAdapter {
   }
 
   newLevelValue(newLevelValue: Value): void {
-    this.colorValue = newLevelValue;
+    this.levelValue = newLevelValue;
     this.log.info('New Level Value: ' + JSON.stringify(newLevelValue));
     this.colorLightService.updateCharacteristic(this.platform.Characteristic.Brightness, Number(newLevelValue.value) * 100);
   }
