@@ -143,11 +143,11 @@ export default class OpticalSignalReceiverAdapter extends serviceAdapter {
 
   handleBrightnessSet(value : CharacteristicValue) {
     this.log.info('Triggered SET Brightness: '+ value);
-    if (value >= 0) {
+    if (value > 0) {
       Api.getInstance().putCommandNumber('device/' + this.channelObject.parent + '/' + this.channelObject.identifier + '/' + this.colorBehaviorParameter.id + '/~pv', 11);
       Api.getInstance().putCommandNumber('device/' + this.channelObject.parent + '/' + this.channelObject.identifier + '/' + this.levelParameter.id + '/~pv', Number(value)/100);
     } else {
-      Api.getInstance().putCommandNumber('device/' + this.channelObject.parent + '/' + this.channelObject.identifier + '/' + this.levelParameter.id + '/~pv', Number(value)/100);
+      Api.getInstance().putCommandNumber('device/' + this.channelObject.parent + '/' + this.channelObject.identifier + '/' + this.levelParameter.id + '/~pv', 0);
       Api.getInstance().putCommandNumber('device/' + this.channelObject.parent + '/' + this.channelObject.identifier + '/' + this.colorBehaviorParameter.id + '/~pv', 0);
     }
 
