@@ -77,7 +77,7 @@ class OpticalSignalReceiverAdapter extends serviceAdapter_1.default {
         this.log.info('New Color Value: ' + JSON.stringify(newColorValue));
     }
     newColorBehaviorValue(newColorBehaviorValue) {
-        this.colorValue = newColorBehaviorValue;
+        this.colorBehaviorValue = newColorBehaviorValue;
         this.log.info('New ColorBehavior Value: ' + JSON.stringify(newColorBehaviorValue));
         if (this.colorBehaviorValue.value >= 1) {
             this.colorLightService.updateCharacteristic(this.platform.Characteristic.On, true);
@@ -106,6 +106,7 @@ class OpticalSignalReceiverAdapter extends serviceAdapter_1.default {
             api_1.default.getInstance().putCommandNumber('device/' + this.channelObject.parent + '/' + this.channelObject.identifier + '/' + this.levelParameter.id + '/~pv', Number(value) / 100);
         }
         else {
+            api_1.default.getInstance().putCommandNumber('device/' + this.channelObject.parent + '/' + this.channelObject.identifier + '/' + this.levelParameter.id + '/~pv', Number(value) / 100);
             api_1.default.getInstance().putCommandNumber('device/' + this.channelObject.parent + '/' + this.channelObject.identifier + '/' + this.colorBehaviorParameter.id + '/~pv', 0);
         }
     }
