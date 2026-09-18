@@ -93,7 +93,7 @@ class OpticalSignalReceiverAdapter extends serviceAdapter_1.default {
     }
     handleOnGet() {
         this.log.debug('Triggered GET On');
-        return this.colorValue.value >= 1;
+        return this.colorBehaviorValue.value >= 1 && this.levelValue.value > 0;
     }
     handleBrightnessGet() {
         this.log.debug('Triggered GET Brightness Number(this.levelValue!.value)*100;');
@@ -102,18 +102,17 @@ class OpticalSignalReceiverAdapter extends serviceAdapter_1.default {
     handleBrightnessSet(value) {
         this.log.info('Triggered SET Brightness: ' + value);
         if (value >= 0) {
+            api_1.default.getInstance().putCommandNumber('device/' + this.channelObject.parent + '/' + this.channelObject.identifier + '/' + this.colorBehaviorParameter.id + '/~pv', 11);
             api_1.default.getInstance().putCommandNumber('device/' + this.channelObject.parent + '/' + this.channelObject.identifier + '/' + this.levelParameter.id + '/~pv', Number(value) / 100);
-            api_1.default.getInstance().putCommandNumber('device/' + this.channelObject.parent + '/' + this.channelObject.identifier + '/' + this.colorBehaviorParameter.id + '/~pv', 1);
         }
         else {
-            api_1.default.getInstance().putCommandNumber('device/' + this.channelObject.parent + '/' + this.channelObject.identifier + '/' + this.levelParameter.id + '/~pv', Number(value) / 100);
             api_1.default.getInstance().putCommandNumber('device/' + this.channelObject.parent + '/' + this.channelObject.identifier + '/' + this.colorBehaviorParameter.id + '/~pv', 0);
         }
     }
     handleOnSet(value) {
         this.log.info('Triggered SET On: ' + value);
         if (value === true) {
-            api_1.default.getInstance().putCommandNumber('device/' + this.channelObject.parent + '/' + this.channelObject.identifier + '/' + this.colorBehaviorParameter.id + '/~pv', 1);
+            api_1.default.getInstance().putCommandNumber('device/' + this.channelObject.parent + '/' + this.channelObject.identifier + '/' + this.colorBehaviorParameter.id + '/~pv', 11);
         }
         else {
             api_1.default.getInstance().putCommandNumber('device/' + this.channelObject.parent + '/' + this.channelObject.identifier + '/' + this.colorBehaviorParameter.id + '/~pv', 0);
